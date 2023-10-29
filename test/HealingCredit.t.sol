@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
-// forge test --match-test testfactorySpawnSystem --match-contract HealingCreditTest -vv --via-ir
-//forge test  --match-contract HealingCreditTest --via-ir --debug testfactorySpawnSystem
+
 
 import {console} from "forge-std/console.sol";
 import "forge-std/Test.sol";
@@ -36,7 +35,7 @@ contract HealingCreditTest is Test {
     uint256 rpi_key;
     IOxygenChain.outputProperties propsMedian;
 
-    address internal constant DAI_WHALE = 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7;
+    address internal constant DAI_WHALE = 0x000000076;
 
     struct median{
         string inputType;
@@ -95,12 +94,7 @@ contract HealingCreditTest is Test {
         rpi_key = key;
     }
 
-    // function factorySpawnSystem(string memory _moboSerial, string memory _name, string memory _systemType , uint256 _percent,
-    //                         string memory _country, string memory _model, string memory _foundation,
-    //                         string memory _manufacturer, string memory _lat, string memory _long) internal returns (address) {
 
-    //                         }
-    //  forge test --match-test testDefaultSystemDeploy --match-contract HealingCreditTest -vvvv --via-ir
     function testDefaultSystemDeploy() public {
         address a = 0x0000000000000000000000000000000000000029;
         vm.prank(a);
@@ -118,7 +112,6 @@ contract HealingCreditTest is Test {
         // ds.changeOwner(hc.owner());
     }
 
-    // forge test --match-test testfactorySpawnSystem --match-contract HealingCreditTest -vvvv --via-ir
     function testfactorySpawnSystem() public {
         testDefaultSystemDeploy();
         int64 lat = 40748817; //"40.748817";
@@ -152,7 +145,6 @@ contract HealingCreditTest is Test {
         // assertEq(hc.owner(), ds.owner());
     }
 
-    // forge test --match-test testtokenBalance --match-contract HealingCreditTest -vvvv --via-ir 
     function testtokenBalance() public{
         uint256 amount = 10000e18;
         deal(address(hc), address(hc), amount);
@@ -166,13 +158,11 @@ contract HealingCreditTest is Test {
     }
 
 
-    // forge test --match-test testrequestMedian --match-contract HealingCreditTest -vvvv --via-ir 
     // function to test a failed median request
     function testrequestMedian() public{
         testfactorySpawnSystem();
         address a = 0x0000000000000000000000000000000000000001;
         string memory name = "wetNWild_Pooool";
-        // string memory systype = "sewage";
         string memory systype = "sewage";
         string memory country = "us";
         vm.prank(address(hc.owner()));
@@ -190,7 +180,6 @@ contract HealingCreditTest is Test {
         hc.requestMedian(sys, percent, propsMedian);
     }
 
-    // forge test --match-test testSendPotentialMedian --match-contract HealingCreditTest -vvvv --via-ir
     // test send median data
     function testSendPotentialMedian() public {
         testfactorySpawnSystem();
@@ -249,27 +238,17 @@ contract HealingCreditTest is Test {
         vm.prank(hc.owner());
         hc.approveChildSystemContract(address(raw_newSystem), name, systemType, country, 0, 0);
         // get event from above call
-        // Vm.Log[] memory logs = vm.getRecordedLogs();
 
         // set the Default System INSTANCE ADDRESS here
         ds = DefaultSystem(payable(raw_newSystem));
-        // vm.warp(1683764689+ 3 days); 
-        // uint256 numberOfBlocks = 10;
-        // vm.roll(block.number() + numberOfBlocks);
+
         address ds_owner = ds.owner();
-        // emit log_named_address("ds_owner", ds_owner);
         assertEq(ds_owner, sysown_wallet);
         
         // POR = HC is it same as ds.porTokenAddress()?
         assertEq(ds.porTokenAddress(), address(hc));  // this could be zero and will cause an issue
 
         
-        // // assertEq(logs.length, 4);
-        // // address raw_sys = abi.decode(logs[0].data, (address));
-        // // assertEq(raw_sys, address(hc));
-        // // completed in testDefaultSystemDeploy()
-        // // assertEq(logs[0].topics[0], keccak256("SystemSpawned(address,string,string,address,uint256)"));
-        // // assertEq(abi.decode(entries[0].data, (string)), "operation completed");
 
         // // now owner register the pi's moboserial for the system
         vm.prank(address(sysown_wallet));
@@ -278,12 +257,10 @@ contract HealingCreditTest is Test {
         // // pi node will submit its own wallet address for approval
         vm.prank(address(pi_wallet));
         ds.setPendingSystemAddress(pi_wallet, moboSerial);
-        // //
-        // // OWNER will approvesystemaddress
+
         vm.prank(address(sysown_wallet));
         ds.approveSystemAddress(pi_wallet);
 
-        // // // now request median
         vm.prank(address(pi_wallet));
         deal(address(hc), address(hc), 10000e18, true );
         //check how much  hc has now
