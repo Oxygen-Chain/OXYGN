@@ -50,13 +50,7 @@ interface IDefaultSystem  {
     // ========================================= Config Setters =========================================
 
     // ========================================= Setter Functions =========================================
-    // change porTokenAddress
-    // function changePorTokenAddress(address _newPorTokenAddress) public onlyOwner {
-    //     require(_newPorTokenAddress != address(0), "New porTokenAddress cannot be zero address");
-    //     require
-    //     porTokenAddress = _newPorTokenAddress;
-    //     // emit porChanged(_newPorTokenAddress, block.timestamp, porTokenAddress);
-    // }
+
     // ========================================= Getter Functions =========================================
 
     function getTribute(address _foundationAddress) external returns (IOxygenChain.Tribute memory);
