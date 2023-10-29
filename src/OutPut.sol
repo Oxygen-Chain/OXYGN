@@ -61,35 +61,6 @@ library OutPut {
     }
 
 
-
-
-
-
-
-
-
-
-
-    // encodewithsignature function returns bytes memory
-    // function bindEncode(string memory _template, address _sender, string memory _name, IOxygenChain.profile memory _profile)
-    //     internal
-    //     pure
-    //     returns (bytes memory)
-    // {
-    //     // return abi.encodeWithSelector(
-    //     return abi.encodeWithSignature(
-    //         _template,
-    //         _sender,
-    //         _profile.macMoboSerial,
-    //         _name,
-    //         _profile.country,
-    //         _profile.model,
-    //         _profile.foundation,
-    //         _profile.manufacturer
-    //     );
-    // }
-
-
     function bindEncode2(bytes4 _template, address _sender, string memory _name, IOxygenChain.profile memory _profile)
         internal
         pure
