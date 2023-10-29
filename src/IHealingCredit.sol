@@ -85,14 +85,7 @@ interface IHealingCredit {
                     ) external returns (address);
 
 
-    // function factorySpawnSystem(
-    //                             address requestor,
-    //                             string memory _name,
-    //                             string memory _systemType,
-    //                             int64  _lat,
-    //                             int64  _long,
-    //                             IOxygenChain.profile memory newProfile
-    //                         ) external returns (address);
+
 
     // ========================================= Config Setters =========================================
 
