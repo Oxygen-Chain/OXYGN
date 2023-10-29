@@ -1,5 +1,5 @@
 # OXYGN
-TBD - opensourced code for Proof of Recycle
+TBD - opensourced code for Proof of Recycle (more to come)
 
 
 # Initial Setup
