@@ -59,26 +59,17 @@ contract HealingCredit is
         __Ownable_init();
         __UUPSUpgradeable_init();
 
-        //         // TODO: Use this!
-        // providerProportion = 0 gwei;
-        // sessionDivisor = 100 gwei; // 1 second of session time per 100 gwei
-        // apiEndpoint = "https://broker.staging.textile.dev";
+
     }
 
     uint256 public rate = 1;
 
     address public oxygenContract;
     address public defaultSystemContract;
-    // variable defines total healing credits
-    // uint256 public totalHealingCredits; balanceOf(address(this))
-    // uint256 public totalMonitoringCredits;
 
-    //constant for                       fba3f97d dcba45565db17b479985b4239ac8625656b55b5bacf3036e6c20f9c8 
+
     bytes4 private constant SELECTOR = 0xfba3f97d; // bytes4(keccak256(bytes('initialize(address,string,string,string,string,string,string,uint256)')));
-    // //arweave address
-    // address public arweaveAddress;
-    // //filecoin address
-    // address public filecoinAddress;
+
 
     // address of nft contract
     address public nftContract;
@@ -95,12 +86,9 @@ contract HealingCredit is
     mapping(string => uint256) public systemTypePercentages;
 
     event Donation(address indexed _from, string _type, uint256 _amount, uint256 _timestamp);
-    // event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-    // emit systemspawned
-    // emit SystemSpawned(requestor, _name, _systemType, newSystemRaw, block.timestamp);
+
     event SystemSpawned(address indexed _requestor, string _name, string _systemType, address _sys_address, address _base_address, uint256 _timestamp);
     //error 
-    // error SystemAlreadyExists(address _systemAddress, string _systemType);
     event rewardFailed(address indexed _systemAddress, string _errormsg, uint256 _amount, uint256 _timestamp);
 
     event Payment(address indexed _from, address indexed _to, string _type, uint256 _amount, uint256 _timestamp);
@@ -113,29 +101,13 @@ contract HealingCredit is
         _unpause();
     }
 
-    // // mint credits needed for each system
-        // function mint(address to, uint256 amount) public onlyOwner {
-        //     _mint(to, amount);
-        // }
+
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal override whenNotPaused {
         super._beforeTokenTransfer(from, to, amount);
     }
-    // recieves donations  and sends to the Healing Pool
 
-        // function donate() public payable {
-        //     //require donation is greater than 0
-        //     require(msg.value > 0, "Donation must be greater than 0");
-        //     totalHealingCredits += msg.value;
-        //     //generate NFT for donation
-        //     // IERC721(nftContract).safeMint(msg.sender, totalHealingCredits);
-        //     // IERC721Upgradeable(nftContract)._safeMint(msg.sender, totalHealingCredits);
-        //     emit Donation(msg.sender, "donation", msg.value, block.timestamp);
-        // }
 
-    // TODO: collect I/O type/values based on i+o epoch.... 
-    // ABOVE to be done in each contract?
-    // relay back from system contract final combined reward???
     function requestMedian(address systemOwner,  uint16 _percent_owed,
                             string memory _name,
                             string memory _i_type,
@@ -170,14 +142,6 @@ contract HealingCredit is
         return requestMedianExe(systemOwner, _percent_owed, hcPotentialMedian);
     }
 
-    // function requestMedian(address systemOwner, uint16 _percent_owed, IOxygenChain.outputProperties memory newPotentialMedian)
-    //     public
-    //     returns (IOxygenChain.outputResult memory)
-    // {
-    //      IOxygenChain.outputResult memory amp_ready = IOxygenChain.outputResult(true,"", newPotentialMedian);
-    //       emit rewardFailed(systemOwner, "...dude starting...", newPotentialMedian.reward, block.timestamp);
-    //       return amp_ready;
-    // }
 
     function requestMedian(address systemOwner, uint16 _percent_owed, IOxygenChain.outputProperties memory newPotentialMedian)
         public
@@ -215,18 +179,6 @@ contract HealingCredit is
             return amp_ready;
         }
 
-        // check to see if type is registered
-        // if (systemTypes[newPotentialMedian.i_type].length == 0){
-        //     amp_ready.error =  "[E] Type not found G@56";
-        //     amp_ready.success = false;
-        //     return amp_ready;
-        // }
-        // // check to see if system is in the type
-        // if (systemTypes[newPotentialMedian.i_type][0] != address(msg.sender)){
-        //     amp_ready.error =  "[E] System is not in type";
-        //     amp_ready.success = false;
-        //     return amp_ready;
-        // }
         if (newPotentialMedian.system == address(0)){
             amp_ready.error =  "[E] Address is eq 0";
             amp_ready.success = false;
@@ -299,27 +251,16 @@ contract HealingCredit is
 
     // internal private function to calculate median reward from outputProperties
     function medianReward(IOxygenChain.outputProperties memory _op) internal returns (uint256) { 
-        // get records from arweave
 
-        // send data to filecoin
-        // require (LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
-        //token.balanceOf(address(this))
-        // calculate reward
         uint256 reward = _op.final_delta * _op.f_rate;
-        // remove reward from total healing credits
-        // totalHealingCredits -= reward;
         _burn(address(this), reward);
-        // mint reward to system
         _mint(_op.system, reward);
         // return reward
         return reward;
     }
     //un reward function
     function unReward(address _system, uint256 _amount) internal { 
-        // burn/remove reward from system
         _burn(_system, _amount);
-        // remove reward from total healing credits
-        // totalHealingCredits += _amount;
         _mint(address(this), _amount);
     }
 
@@ -328,19 +269,7 @@ contract HealingCredit is
         _mint(address(this), tokens);
     } 
 
-    // function finalizeMedianReward(address systemOwner, uint16 _percent_owed, IOxygenChain.outputProperties memory newPotentialMedian)
-    //     public
-    // {
-    //     // uint256 raw_reward = medianReward(newPotentialMedian);
-    //     // uint256 reward = raw_reward - (raw_reward * _percent_owed / 100);
-    //     // newPotentialMedian.reward = reward;
-    //     // emit Payment(address(this), systemOwner, "finalizeMedianReward", _percent_owed, block.timestamp);
-    // }
 
-
-    // PAY OUT!!! [4 MATERIAL]
-    // executes on the transaction after previous call was successful in reading state
-    // with included calculations
     function finalizeMedianReward(address systemOwner, uint16 _percent_owed, IOxygenChain.outputProperties memory newPotentialMedian)
         public
     {
@@ -373,9 +302,6 @@ contract HealingCredit is
                 }
             }
 
-            // else { // remove healing credit from pool
-            //     // unReward(newPotentialMedian.system, reward);
-            // }
         }
     }
 
@@ -388,19 +314,6 @@ contract HealingCredit is
         // totalHealingCredits += _amount;
     }
     
-    //convert string to uint
-
-    // function stringToUint(string memory s) internal pure returns (uint256 result) {
-    //     bytes memory b = bytes(s);
-    //     uint256 i;
-    //     result = 0;
-    //     for (i = 0; i < b.length; i++) {
-    //         uint256 c = uint256(uint8(b[i]));
-    //         if (c >= 48 && c <= 57) {
-    //             result = result * 10 + (c - 48);
-    //         }
-    //     }
-    // }
 
     // ========================================= Org Actions =========================================
 
