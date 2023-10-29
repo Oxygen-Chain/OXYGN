@@ -2,17 +2,6 @@
 
 pragma solidity ^0.8.13;
 
-// import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-// // import "@openzeppelin/contracts/utils/Strings.sol";
-// // import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-// // import owner from OpenZeppelin
-// import "@openzeppelin/contracts/access/Ownable.sol";
-// // //Pausable import
-// // import "@openzeppelin/contracts/security/Pausable.sol";
-// //import abi decoder
-// // import "@openzeppelin/contracts/utils/Address.sol";
-
-// import "./IOxygenChain.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "./IDefaultSystem.sol";
@@ -42,15 +31,6 @@ contract DefaultSystem is Ownable, Initializable, Pausable, IDefaultSystem {
     uint256 public lastSubmitted=0;  // defines the last date median was submitted
     uint public cumalitiveOff=0;  // total days out of service
 
-    // map epoch to totals
-    // {"max_1673838392" : 5}
-    // {"1_1673838392": {"itype": "disolved_oxygen", "i_value": 100, "o_value": 241}}
-    // {"2_1673838392": {"itype": "tellerium",  "i_value": 100, "o_value": 241}}
-    // or add a reference id to the FileCoin or Arweave data files relevant to this payment
-    // check to see if all max entries found... remember not all saved in order
-    // loop through all
-    // combine with all payments for total
-    // rewardtot + rewardtot[N-1]
 
 
     // variable defins potential median object
@@ -89,17 +69,12 @@ contract DefaultSystem is Ownable, Initializable, Pausable, IDefaultSystem {
                         string memory _manufacturer,
                         uint256 _expectedflow
                 ) public initializer {
-        //requires that request is also sent from factory address
-        // disable initialization after already in the "initializer" decorator above
-        // _disableInitializers();
-        // above prevents re-initialization
+
         emit SystemSubmitted(_sender, msg.sender,  _name, _macMoboSerial);
         if (porTokenAddress!=msg.sender){
             porTokenAddress = msg.sender;
         }
-        // IHealingCredit sender = IHealingCredit(msg.sender);
-        // emit SystemSubmitted(sender.owner(), _name, _macMoboSerial);
-        // string memory message = "Only HC factory can initialize";
+
         moboSerials[_macMoboSerial] = true;
 
         // OwnableUpgradeable._transferOwnership( msg.sender);
@@ -203,27 +178,15 @@ contract DefaultSystem is Ownable, Initializable, Pausable, IDefaultSystem {
                                                                     _long
                                                                 );
 
-            // bytes memory data = abi.encodeWithSignature("requestMedian(address,string,string,uint256,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256,int64,int64)", 
-            //                     systemOwner, name, _i_type, _i_value, _o_type, _o_value, _i_epoch, _o_epoch, _final_delta, _f_rate, _reward, _median, _lat, _long);
-            // (bool success, bytes memory result) = address(porTokenAddress).call(data);
+
 
         IHealingCredit ihc = IHealingCredit(porTokenAddress);
-        // adding percentOwed to request
-        // IOxygenChain.outputResult memory opr = ihc.requestMedian(systemOwner, name, _i_type, _i_value, _o_type, _o_value, _i_epoch, _o_epoch, _final_delta, _f_rate, _reward, _median, _lat, _long); 
-        // IOxygenChain.outputResult memory opr = ihc.requestMedian(systemOwner, percentOwed, hcPotentialMedian); 
-        //use owner of contracts address... get result
-        // IOxygenChain.outputResult memory opr = ihc.requestMedian( owner(), percentOwed, hcPotentialMedian); 
+
         IOxygenChain.outputResult memory opr = ihc.requestMedian( owner(), percentOwed, hcPotentialMedian); 
         // send back result to change state
         require(opr.success, opr.error);
         ihc.finalizeMedianReward(owner(), percentOwed, hcPotentialMedian);
-        // IOxygenChain.outputResult memory returnValue;
-        // returnValue = abi.decode(result, (IOxygenChain.outputResult));
-        // if (!returnValue.success){
-        //     return returnValue.error;
-        // }
-        // IOxygenChain.outputProperties memory opr = returnValue.properties;
-        // opr = porTokenAddress.call('requestMedian', hcPotentialMedian);
+
         IOxygenChain.outputProperties memory props = opr.properties;
         if (props.median > 0) {
 
@@ -274,10 +237,7 @@ contract DefaultSystem is Ownable, Initializable, Pausable, IDefaultSystem {
         ISponsorApplication spa = ISponsorApplication(_sponsorAddress);
         ISponsorApplication.system_sponsored memory ssp = spa.getPendingSystem(address(this));
         require(ssp.createdon != 0, "Sponsor does not exist");
-        // ISponsorApplication.simple_result memory sr = spa.add_pendingsponsorSystem(address(this), _remaining, _percent);
-        // if (!sr.success) {
-        //     revert("[E] error while removing pending..."); 
-        // }
+
 
 
         for (uint i = 0; i < tributes.length; i++) {
@@ -350,21 +310,6 @@ contract DefaultSystem is Ownable, Initializable, Pausable, IDefaultSystem {
                                                                 );
 
         potentialMedians[i_type] = props;
-        // string [] memory items = medianTotals.mapping (address => uint) name;
-        // for (string name in medianTotals.items())
-        // for (uint i = 0; i < tot; i++) {
-        //     IOxygenChain.Tribute memory tribute = foundationList[tributes[i]];
-        //     percent_current += tribute.percentage;
-        // } 
-        
-        // Loop through all i_type
-
-        // medianTotals[props.o_epoch] = //add all type totals here
-
-    
-        // last day
-        // last week
-        // last month
        
     }
 
