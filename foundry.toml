@@ -1,0 +1,11 @@
+[profile.default]
+src = 'src'
+out = 'out'
+# test = 'test' this is the default
+libs = ['lib']
+
+# [rpc-endpoints]
+# below needed to test: forge build --contracts=path/to/File.sol
+# optimizer = false
+remappings = ["@openzeppelin/=lib/openzeppelin-contracts", "@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable"]
+# See more config options https://github.com/foundry-rs/foundry/tree/master/config
